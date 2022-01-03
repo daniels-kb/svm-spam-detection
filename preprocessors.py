@@ -10,8 +10,8 @@ class HyperlinkEncoder(BaseEstimator, TransformerMixin):
         return None
 
     def fit(self, X, y=None):
-        self.url_regex = re.compile(r'(http|https)://[^\s]*')
-        self.mail_regex = re.compile(r'[^\s]+@[^\s]+[.][^\s]+')
+        self.url_re = re.compile(r'(http|https)://[^\s]*')
+        self.mail_re = re.compile(r'[^\s]+@[^\s]+[.][^\s]+')
         
         return self
 
@@ -20,8 +20,8 @@ class HyperlinkEncoder(BaseEstimator, TransformerMixin):
         
         # convert email addresses to 'emailaddr' and URLs to 'httpaddr'
         for email in X:
-            email = self.url_regex.sub(r' httpaddr ', email) 
-            email = self.mail_regex.sub(r' emailaddr ', email)
+            email = self.url_re.sub(r' httpaddr ', email) 
+            email = self.mail_re.sub(r' emailaddr ', email)
        
         return X
         
@@ -32,23 +32,32 @@ class SingleCharacterEncoder(BaseEstimator, TransformerMixin):
         return None
 
     def fit(self, X, y=None):
+        self.number_re = re.compile(r'[0-9]+')
+        self.dollar_re = re.compile(r'[$]')
+        self.exclammark_re = re.compile(r'[!]')
+        self.questmark_re = re.compile(r'[?]')
+        self.punct_re = re.compile(r'([^\w\s]+)|([_-]+)')
+    
         return self
 
     def transform(self, X):
         X = X.copy()
-        # convert numbers to 'number'
-        X = re.sub(r'[0-9]+', r' number ', X)
-
-        # convert $, ! and ? to proper words
-        X = re.sub(r'[$]', r' dollar ', X)
-        X = re.sub(r'[!]', r' exclammark ', X)
-        X = re.sub(r'[?]', r' questmark ', X)
-
-        # convert other punctuation to whitespace
-        X = re.sub(r'([^\w\s]+)|([_-]+)', r' ', X)
         
-        # remove trailing and leading whitespace
-        X = X.strip(' ')
+        for email in X:
+            # convert numbers to 'number'
+            email = self.number_re.sub(r' number ', email)
+
+            # convert $, ! and ? to proper words
+            email = self.dollar_re.sub(r' dollar ', email)
+            email = self.exclammark_re.sub(r' exclammark ', email)
+            email = self.questmark_re.sub(r' questmark ', email)
+
+            # convert other punctuation to whitespace
+            email = self.punct_re.sub(r' ', email)
+            
+            # remove trailing and leading whitespace
+            email = email.strip(' ')
+
         return X
         
 # Remove English language stopwords
@@ -58,13 +67,15 @@ class StopwordRemover(BaseEstimator, TransformerMixin):
         return None
 
     def fit(self, X, y=None):
-        self.pattern = re.compile(r'\b(' + r'|'.join(nltk.corpus.stopwords.words('english')) + r')\b\s*')
+        self.stopwords_re = re.compile(r'\b(' + r'|'.join(nltk.corpus.stopwords.words('english')) + r')\b\s*')
         
         return self
 
     def transform(self, X):
         X = X.copy()
-        X = self.pattern.sub('', X)
+
+        for email in X:
+            email = self.stopwords_re.sub('', email)
         
         return X
     
@@ -75,18 +86,15 @@ class WordStemmer(BaseEstimator, TransformerMixin):
         return None
 
     def fit(self, X, y=None):
-        self.stemWords = []
-        
-        # perform word stemming
-        emailWords = X.split(' ')
-        stemmer = nltk.stem.snowball.SnowballStemmer('english')
-        for word in emailWords:
-            stemWords.append(stemmer.stem(word))
-        
         return self
 
     def transform(self, X):
         X = X.copy()
-        X = ' '.join(self.stemWords)
+        
+        for email in X:
+            emailWords = email.split(' ')
+            stemmer = nltk.stem.snowball.SnowballStemmer('english')
+            stemWords = [stemmer.stem(word) for word in emailWords]
+            email = ' '.join(stemWords)
         
         return X
