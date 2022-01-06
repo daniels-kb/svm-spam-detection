@@ -16,7 +16,6 @@ def run_training() -> None:
         data[config.FEATURES],
         data[config.TARGET],
         test_size = config.TRAIN_TEST_SPLIT,
-        shuffle = True,
         random_state = config.SEED_VALUE)
     
     pipeline.svm_pipe.fit(X_train, y_train)
