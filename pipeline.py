@@ -13,7 +13,9 @@ svm_pipe = Pipeline(
         ('word_stemmer', pp.WordStemmer()),
         
         ('vectoriser', TfidfVectorizer()),
+        ('decomposer', TruncatedSVD(n_components=15)),
+        ('scaler', MaxAbsScaler()),
         
-        ('Support_Vector_Machine', svm.SVC(C = 10, gamma = 0.01, kernel = 'rbf'))
+        ('Support_Vector_Machine', svm.SVC(C = 1000, gamma = 0.01, kernel = 'linear'))
     ]
 )
