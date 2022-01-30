@@ -1,7 +1,13 @@
-# Spam detection with a Support Vector Machine
+# Spam detection with a Support Vector Machine WIP
 
 E-mail is one of the most secure medium for online communication and transferring data through the web. With its increase in popularity, the number of ill-intentioned/unsolicited emails has also increased rapidly. To filtering data, there are different approaches which automatically classify these messages. The one I picked for this project was a support vector classifier, a method I first experimented with while on [this Skills Bootcamp](https://instituteofcoding.org/skillsbootcamps/course/skills-bootcamp-in-artificial-intelligence/).
 An SVM works well in a binary classification task such as this one. It separates spam from non-spam (aka ham) by drawing a separator known as a hyperplane between the classes.
+
+#To run (tests currently failing)
+
+Navigate to the root folder of this project and just run tox. It puts setup, running and testing in one place. 
+Writing or have written unit tests for: Input validation, inter-phase reproducibility, individual preprocessors and their correct function collectively within the pipeline (integration test).
+There is also an experimental branch where the benefit of dimensionality reduction methods is explored. That is still in research phase.
 
 ### Learning goals
 

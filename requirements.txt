@@ -1,0 +1,15 @@
+# ML requirements
+numpy
+scikit-learn
+pandas
+jupyter
+matplotlib
+seaborn
+nltk
+joblib
+
+# validation
+marshmallow
+
+#testing
+pytest
