@@ -19,7 +19,6 @@ def test_pipeline_transforms_email_data(pipeline_inputs):
     assert (True)
 '''
 
-#FAILING
 def test_pipeline_predict_takes_validated_input(pipeline_inputs, sample_input_data):
     # Given
     X_train, X_test, y_train, y_test = pipeline_inputs
@@ -27,9 +26,7 @@ def test_pipeline_predict_takes_validated_input(pipeline_inputs, sample_input_da
 
     # When
     validated_inputs, errors = validate_inputs(input_data=sample_input_data)
-    predictions = pipeline.svm_pipe.predict(
-        validated_inputs[config.FEATURES]
-    )
+    predictions = pipeline.svm_pipe.predict(validated_inputs[config.FEATURES])
 
     # Then
     assert predictions is not None
